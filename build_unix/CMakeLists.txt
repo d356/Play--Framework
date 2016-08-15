@@ -15,15 +15,14 @@ set(Boost_FIND_REQUIRED TRUE)
 find_package(Boost COMPONENTS system filesystem chrono)
 include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(MYSQL REQUIRED)
+find_package(MYSQL)
 include_directories(${MYSQL_INCLUDE_DIR})
 
-add_library(Framework
+set(Framework_SOURCES
 	../src/Base64.cpp
 	../src/bitmap/Bitmap.cpp
 	../src/bitmap/BMP.cpp
 	../src/bitmap/JPEG.cpp
-	../src/bitmap/PNG.cpp
 	../src/bitmap/TGA.cpp
 	../src/BitStream.cpp
 	../src/Config.cpp
@@ -71,16 +70,26 @@ add_library(Framework
 	../src/xml/Parser.cpp
 	../src/xml/Utils.cpp
 	../src/xml/Writer.cpp
-	../src/zip/ZipArchiveReader.cpp
-	../src/zip/ZipArchiveWriter.cpp
-	../src/zip/ZipDeflateStream.cpp
-	../src/zip/ZipFile.cpp
-	../src/zip/ZipInflateStream.cpp
-	../src/zip/ZipStoreStream.cpp
 )
 
-add_library(Framework_MySql
-	../src/mysql/Client.cpp
-	../src/mysql/Result.cpp
-	../src/mysql/AccessInfo.cpp
+if(ZLIB_FOUND)
+   set(Framework_SOURCES ${Framework_SOURCES}
+	../src/bitmap/PNG.cpp
+	../src/zip/ZipArchiveReader.cpp
+	../src/zip/ZipArchiveWriter.cpp
+        ../src/zip/ZipDeflateStream.cpp
+ 	../src/zip/ZipFile.cpp
+	../src/zip/ZipInflateStream.cpp
+	../src/zip/ZipStoreStream.cpp 
 )
+endif()
+
+add_library(Framework ${Framework_SOURCES})
+
+if(MYSQL_FOUND)
+ add_library(Framework_MySql
+ 	../src/mysql/Client.cpp
+ 	../src/mysql/Result.cpp
+ 	../src/mysql/AccessInfo.cpp
+ )
+endif()
