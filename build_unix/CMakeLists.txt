@@ -11,7 +11,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(../include)
 
-set(Boost_FIND_REQUIRED TRUE)
 find_package(Boost COMPONENTS system filesystem chrono)
 include_directories(${Boost_INCLUDE_DIRS})
 
